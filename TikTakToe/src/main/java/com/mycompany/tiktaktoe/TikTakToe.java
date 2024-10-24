@@ -31,7 +31,7 @@ public class TikTakToe {
         } // end for 
     } // end function clearMatrix
     
-    public static boolean finishedGame(String [][] matrix, boolean finished){
+    public static String finishedGame(String [][] matrix, String finished){
         int lineX=0, lineO=0, columnX=0, columnO=0, diagP_X=0, diagP_O=0, diagS_X = 0, diagS_O = 0, tieCount=0;
         
         // verify if any player winned
@@ -53,20 +53,19 @@ public class TikTakToe {
                 }
                 
                 if(matrix[j][i] != null){ 
-                    tieCount++;
                     if (matrix[j][i] == "X") columnX++;
                     if (matrix[j][i] == "O") columnO++;
                 }  
              
             } // end for in j
             if(lineX == 3 || lineO == 3 || columnX == 3 || columnO == 3 || diagP_X == 3 || diagP_O ==3 || diagS_X == 3 || diagS_O == 3){
-                        finished = true;
+                        finished = "playerWon";
             } // end if for the confirmations 
         } // end for in i 
         
-        if (tieCount == 9 && !finished){ // verifies if it's a tie
-            finished = true;
-            System.out.println("\nIt's a tie!");
+        if (tieCount == 9 && !finished.equals("playerWon")){ // verifies if it's a tie
+            finished = "tie";
+            System.out.println("\nIt's a tie!\n");
         }
         return finished;
     } // end function finishedGame
@@ -77,7 +76,7 @@ public class TikTakToe {
         int mode = 0;
         Scanner sc = new Scanner(System.in);
         String[][] matrix = new String[3][3];
-        boolean finished = false;
+        String finished = "notFin";
         int turn = 0, empty = 0;
         int player = 0;
         
@@ -86,7 +85,7 @@ public class TikTakToe {
         System.out.println("--------------------------------");
         
         do{
-            player = 0; mode = 0; turn = 0; finished = false; 
+            player = 0; mode = 0; turn = 0; finished = "notFin"; 
             clearMatrix(matrix);    
             
             do{
@@ -114,12 +113,9 @@ public class TikTakToe {
                                 matrix[fila - 1][column - 1] = "X";
                                 empty = 1;
                                 showMatrix(matrix);
-                                finishedGame(matrix, finished);
                                 finished = finishedGame(matrix, finished);
-                                if(finished){
-                                    if(turn < 8){
-                                        System.out.println("\nPlayer won!\n");
-                                    }
+                                if(finished.equals("playerWon")){
+                                    System.out.println("\nPlayer won!\n");
                                 }
                                 turn++;
                             }                                 
@@ -134,15 +130,14 @@ public class TikTakToe {
                             matrix[fila][column] = "0";
                             empty = 1;
                             showMatrix(matrix);
-                            finishedGame(matrix, finished);
                             finished = finishedGame(matrix, finished);
-                            if (finished){ // verify if the computer won
-                                System.out.println("\nCOMPUTER WON!\n");
+                            if(finished.equals("playerWon")){
+                                    System.out.println("\nPlayer won!\n");
                             }
                             turn++;
-                        } // end else computer turn
+                        }// end else computer turn
                     } while (empty == 0);
-                } while (!finished); // end mode 1 
+                } while(finished.equals("notFin")); // end mode 1 
             }else if (mode == 2){ // mode with 2 players
                 System.out.println("\n >>> 2 players mode <<< \n");
                 showMatrix(matrix);
@@ -164,15 +159,13 @@ public class TikTakToe {
                             showMatrix(matrix);
                             finishedGame(matrix, finished);
                             finished = finishedGame(matrix, finished);
-                            if(finished) {
-                                if(turn < 8) {
-                                    System.out.println("\nPlayer " + player + " won!\n");
-                                }
+                            if(finished.equals("playerWon")) {
+                                System.out.println("\nPlayer " + player + " won!\n");
                             }
                             turn++;
                         } // end else
                     } while(empty == 0);
-                } while(!finished);
+                } while(finished.equals("notFin"));
             } // end mode 2
         }while(mode != 3); 
         
